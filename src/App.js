@@ -1,13 +1,13 @@
 import React from 'react';
+import { Provider} from './Context';
+import Home from './Home';
 import './App.css';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Hello</h1>
-      </header>
-    </div>
+    <Provider>
+      <Home />
+    </Provider>
   );
 }
 
