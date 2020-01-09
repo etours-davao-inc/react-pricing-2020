@@ -1,6 +1,8 @@
 import React,  {useContext} from 'react';
 import { PricingContext } from './Context';
 
+import Day from './Day';
+
 export default () => {
   const { items, actions } = useContext(PricingContext);
 
@@ -11,7 +13,7 @@ export default () => {
 
   return (
     <>
-      {items.map((item) => <p key={item.key}>{item.Header}</p>)}
+      {items.map((item) => <Day key={item.key} item={item} />)}
       <button onClick={handleClick}>Add Day</button>
     </>
   )
