@@ -61,9 +61,9 @@ const Form = () => {
 }
 
 const CloseButton = ({ k }) => {
-  const { actions } = useContext(PricingContext);
+  const { removeDay } = useContext(PricingContext);
   return (
-    <button type="button" onClick={() => actions.removeDay(k)} className="close text-right" aria-label="Close">
+    <button type="button" onClick={() => removeDay(k)} className="close text-right" aria-label="Close">
       <span aria-hidden="true" className="text-right"><FaTimesCircle style={{ color: 'red' }} /></span>
     </button>
   )
@@ -78,7 +78,6 @@ const Wrapper = ({ children }) => (
 const DayHeader = ({ children }) => <h3 className="text-left">{children}</h3>
 
 export default (props) => {
-  const { actions } = useContext(PricingContext);
   const { Header, key } = props.item;
   return (
     <Wrapper>

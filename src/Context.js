@@ -40,7 +40,7 @@ export const Provider = (props) => {
   };
   const { children } = props
   return (
-    <PricingContext.Provider value={{...state, actions}}>
+    <PricingContext.Provider value={{...state, ...actions}}>
       {children}
     </PricingContext.Provider>
   )
