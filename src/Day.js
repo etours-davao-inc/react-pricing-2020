@@ -1,16 +1,15 @@
 import React, { useContext } from 'react';
 import { PricingContext } from './Context';
-
-
+import { FaTimesCircle } from 'react-icons/fa';
 
 export default (props) => {
   const { actions } = useContext(PricingContext);
   const { Header, key } = props.item;
   return (
-    <div style={{ border: '1px solid white', padding: '8px', marginBottom: '8px' }}>
+    <div style={{ border: '1px solid white', padding: '8px', marginBottom: '8px', backgroundColor: 'white', color: '#282c34' }}>
       <div className="">
         <button type="button" onClick={() => actions.removeDay(key)} className="close text-right" aria-label="Close">
-          <span aria-hidden="true" className="text-right text-danger">&times;</span>
+          <span aria-hidden="true" className="text-right"><FaTimesCircle style={{color: 'red'}} /></span>
         </button>
         <p className="text-left">{Header}</p>
       </div>
