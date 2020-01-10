@@ -36,6 +36,9 @@ export const Provider = (props) => {
       updateDays(filteredItems.length)
       refreshItems(filteredItems) // Refresh items
       updateState({...state, items:filteredItems}) // remove
+    },
+    priceItemSubmit(data) {
+      console.log(data);
     }
   };
   const { children } = props
