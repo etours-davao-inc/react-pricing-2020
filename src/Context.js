@@ -4,7 +4,7 @@ export const PricingContext = React.createContext();
 
 const initialState = {
   name:'Tom',
-  items: []
+  items: [],
 }
 
 export const Provider = (props) => {
@@ -16,6 +16,7 @@ export const Provider = (props) => {
       const day = i + 1
       item.Header = `Day ${day}`
       item.key = day
+      item.expenses.forEach(expense => expense.key = day )
       console.log(day)
     });
   }
@@ -26,7 +27,7 @@ export const Provider = (props) => {
       const { items } = state;
       const currentDay = days + 1
       updateDays(currentDay);
-      items.push({Header: `Day ${currentDay}`, key: currentDay})
+      items.push({Header: `Day ${currentDay}`, key: currentDay, expenses: [] })
       updateState({...state, items })
     },
     removeDay(key) {
@@ -38,7 +39,14 @@ export const Provider = (props) => {
       updateState({...state, items:filteredItems}) // remove
     },
     priceItemSubmit(data) {
+      console.log(state.items)
       console.log(data);
+      const items = state.items;
+      const index = items.findIndex(({key}) => {
+        return key === data.key;
+      })
+      items[index].expenses.push(data);
+      updateState({...state, items})
     }
   };
   const { children } = props
