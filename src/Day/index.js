@@ -22,12 +22,14 @@ const Wrapper = ({ children }) => (
 const DayHeader = ({ children }) => <h3 className="text-left">{children}</h3>
 
 export default (props) => {
-  const { Header, key } = props.item;
+  const { Header, key, expenses } = props.item;
+const expenseTable = expenses.map(({ item, price, type }) => <div key={item}>{key} : {item} : {price} --> {type}</div>)
   return (
     <Wrapper>
       <CloseButton k={key} />
       <DayHeader>{Header}</DayHeader>
       <Form k={key} />
+      {expenseTable}
     </Wrapper>
   )
 }
