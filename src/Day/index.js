@@ -1,6 +1,7 @@
 import React, { useContext } from 'react';
 import { PricingContext } from '../Context';
 import { FaTimesCircle } from 'react-icons/fa';
+import './Day.css';
 import Form from './Form';
 
 
@@ -23,16 +24,59 @@ const DayHeader = ({ children }) => <h3 className="text-left">{children}</h3>
 
 export default (props) => {
   const { Header, key, expenses } = props.item;
-const expenseTable = expenses.map(({ item, price, type }) => <div key={item}>{key} : {item} : {price} --> {type}</div>)
   return (
     <Wrapper>
       <CloseButton k={key} />
       <DayHeader>{Header}</DayHeader>
       <Form k={key} />
-      {expenseTable}
+      <ExpenseTable>
+        {expenses.map((item) => <Expense key={item.item} item={item} />)}
+      </ExpenseTable>
     </Wrapper>
   )
 }
+
+const ExpenseTable = ({ children }) => (
+  <div className="mt-4">
+    <table>
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Type</th>
+          <th>Price</th>
+          <th>Shared</th>
+          <th>Vat</th>
+          <th>CoH</th>
+          <th>Remarks</th>
+        </tr>
+      </thead>
+      <tbody>
+        {children}
+      </tbody>
+    </table>
+  </div>
+)
+
+const Expense = (props) => {
+  const { item,
+    type,
+    price,
+    remarks,
+    shared,
+    coh,
+    vat } = props.item;
+  return (
+    <tr>
+      <td>{item}</td>
+      <td>{type}</td>
+      <td>{`Php ${price}`}</td>
+      <td>{shared ? 'True' : 'False'}</td>
+      <td>{vat ? 'True' : 'False'}</td>
+      <td>{coh ? 'True' : 'False'}</td>
+      <td>{remarks}</td>
+    </tr>
+  )
+};
 
 
 
