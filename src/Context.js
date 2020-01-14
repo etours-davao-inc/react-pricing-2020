@@ -10,6 +10,7 @@ const initialState = {
       key: 1,
       expenses: [
         {
+          id: '9r0ts8d8c8d36tbb0qbqw2',
           key: 1,
           item: "Crocodile Park",
           type: "entrancefee",
@@ -57,12 +58,13 @@ export const Provider = (props) => {
     },
     priceItemSubmit(data) {
       console.log(state.items)
-      console.log(data);
+      console.log('Submitted',data.id);
       const items = state.items;
       const index = items.findIndex(({ key }) => {
         return key === data.key;
       })
       items[index].expenses.push(data);
+      console.log('New item', items[index])
       updateState({ ...state, items })
     }
   };

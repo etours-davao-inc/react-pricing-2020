@@ -16,7 +16,12 @@ export default ({ k }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    priceItemSubmit(state);
+    const stateWithId = state;
+    const id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
+    console.log('id', id)
+    stateWithId.id = id
+    console.log('StateWithID', stateWithId.id)
+    priceItemSubmit(stateWithId);
     setState(initialState)
   }
   

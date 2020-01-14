@@ -30,7 +30,7 @@ export default (props) => {
       <DayHeader>{Header}</DayHeader>
       <Form k={key} />
       <ExpenseTable>
-        {expenses.map((item) => <Expense key={item.item} item={item} />)}
+        {expenses.map((item) => <Expense key={item.id} item={item} />)}
       </ExpenseTable>
     </Wrapper>
   )
@@ -41,6 +41,7 @@ const ExpenseTable = ({ children }) => (
     <table>
       <thead>
         <tr>
+          <th>Id</th>
           <th>Item</th>
           <th>Type</th>
           <th>Price</th>
@@ -58,7 +59,9 @@ const ExpenseTable = ({ children }) => (
 )
 
 const Expense = (props) => {
-  const { item,
+  const { 
+    id,
+    item,
     type,
     price,
     remarks,
@@ -67,6 +70,7 @@ const Expense = (props) => {
     vat } = props.item;
   return (
     <tr>
+      <td>{id}</td>
       <td>{item}</td>
       <td>{type}</td>
       <td>{`Php ${price}`}</td>
