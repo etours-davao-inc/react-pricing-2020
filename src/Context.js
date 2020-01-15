@@ -83,8 +83,9 @@ export const Provider = (props) => {
       if (expense.price === 0 || expense.price < 0) return;
       const items = [...state.items,];
       const index = items.findIndex(({ key }) => key === expense.key)
-      const itemIndex = [...items[index].expenses].findIndex(exp => exp.id === expense.id);
-      if ([...items[index].expenses].find(exp => exp.item === expense.item)) return
+      let expenses = [...items[index].expenses];
+      const itemIndex = expenses.findIndex(exp => exp.id === expense.id);
+      // if (expenses.find(exp => exp.item === expense.item)) return
       items[index].expenses[itemIndex] = expense;
       updateState({ ...state, items })
     }
