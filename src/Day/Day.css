@@ -12,6 +12,6 @@ th, td {
 }
 
 tr:hover {
-
+  cursor: pointer;
   background-color: rgba(72, 219, 251,.50);
 }
