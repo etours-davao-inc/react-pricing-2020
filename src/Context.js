@@ -53,7 +53,8 @@ export const Provider = (props) => {
       const { items } = state;
       const filteredItems = items.filter((item) => item.key !== key);
       updateDays(filteredItems.length);
-      updateState({ ...state, items: refreshItems(filteredItems) });
+      refreshItems(filteredItems)
+      updateState({ ...state, items: filteredItems });
     },
     priceItemSubmit(data) {
       console.log('Submitted', data);
