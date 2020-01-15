@@ -1,10 +1,19 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, forwardRef, useImperativeHandle } from 'react';
 import { PricingContext } from '../Context';
 
+const defaultState = { 
+  item: "", 
+  type: "miscellaneous", 
+  price: "", 
+  shared: false, 
+  vat: false, 
+  coh: false, 
+  remarks: "" 
+};
 
-export default ({ k }) => {
-  const defaultState = { key: k, item: "", type: "miscellaneous", price: "", shared: false, vat: false, coh: false, remarks: "" };
-  const { priceItemSubmit } = useContext(PricingContext);
+export default forwardRef((props, ref) => {
+  const { k } = props;
+  const { priceItemSubmit, updatePriceItem } = useContext(PricingContext);
   const [state, setState] = useState(defaultState);
   const onChange = (e) => {
     console.log(e.target.name, e.target.value)
@@ -16,12 +25,25 @@ export default ({ k }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if (state.id) {
+      updatePriceItem(state)
+      setState(defaultState)
+      return
+    }
     priceItemSubmit({
       ...state,
+      key: k,
       id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
     });
     setState(defaultState)
   }
+
+  useImperativeHandle(ref, () => ({
+    setFormState: (expense) => {
+      console.log("Load form state", expense)
+      setState(expense);
+    }
+  }));
 
   return (
     <form className="form-inline" onSubmit={(e) => onSubmit(e)}>
@@ -52,7 +74,6 @@ export default ({ k }) => {
             className="form-check-input"
             checked={state.shared}
             onChange={onChange}
-
           />
           <label htmlFor={`shared-${state.key}`} className="form-check-label">Shared</label>
         </div>
@@ -87,10 +108,10 @@ export default ({ k }) => {
       <button
         type="submit"
         className="btn btn-success"
-        disabled={state.price == "" || state.item == ""}
+        disabled={state.price === "" || state.item === "" || state.price == 0 }
       >
         Add
       </button>
     </form>
   )
-};
+});

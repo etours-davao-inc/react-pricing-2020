@@ -45,8 +45,10 @@ const ExpenseTable = ({ children }) => (
 )
 
 const Expense = (props) => {
+  const { priceItemClicked } = useContext(PricingContext);
   const { 
     id,
+    key,
     item,
     type,
     price,
@@ -55,7 +57,7 @@ const Expense = (props) => {
     coh,
     vat } = props.item;
   return (
-    <tr>
+    <tr onClick={() => priceItemClicked(id, key)}>
       <td>{id}</td>
       <td>{item}</td>
       <td>{type}</td>
@@ -69,12 +71,13 @@ const Expense = (props) => {
 };
 
 export default (props) => {
+  const { PriceFormRef } = useContext(PricingContext);
   const { Header, key, expenses } = props.item;
   return (
     <Wrapper>
       { key > 1 && <CloseButton k={key} /> }
       <DayHeader>{Header}</DayHeader>
-      <Form k={key} />
+      <Form k={key} ref={PriceFormRef} />
       <ExpenseTable>
         {expenses.map((item) => <Expense key={item.id} item={item} />)}
       </ExpenseTable>

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 
 export const PricingContext = React.createContext();
 
@@ -28,6 +28,7 @@ const initialState = {
 export const Provider = (props) => {
   const [state, updateState] = useState(initialState);
   const [days, updateDays] = useState(1)
+  const PriceFormRef = useRef(null);
 
   const refreshItems = (items) => {
     items.forEach((item, i) => {
@@ -59,7 +60,7 @@ export const Provider = (props) => {
     priceItemSubmit(data) {
       console.log('Submitted', data);
       if (data.item === "") return;
-      if (data.price == 0 || data.price < 0) return;
+      if (data.price === 0 || data.price < 0) return;
       const items = [...state.items,];
       const index = items.findIndex(({ key }) => key === data.key)
       let expenses = [...items[index].expenses];
@@ -67,11 +68,30 @@ export const Provider = (props) => {
       expenses = [...expenses, data];
       items[index].expenses = expenses;
       updateState({ ...state, items })
+
+    },
+    priceItemClicked(id, k) {
+      console.log('Clicked price item', k, id);
+      const items = [...state.items,];
+      const index = items.findIndex(({ key }) => key === k)
+      let expense = [...items[index].expenses].find(expense => expense.id === id);
+      PriceFormRef.current.setFormState(expense)
+    },
+    updatePriceItem(expense) {
+      console.log('Update Price Item', expense)
+      if (expense.item === "") return;
+      if (expense.price === 0 || expense.price < 0) return;
+      const items = [...state.items,];
+      const index = items.findIndex(({ key }) => key === expense.key)
+      const itemIndex = [...items[index].expenses].findIndex(exp => exp.id === expense.id);
+      if ([...items[index].expenses].find(exp => exp.item === expense.item)) return
+      items[index].expenses[itemIndex] = expense;
+      updateState({ ...state, items })
     }
   };
   const { children } = props
   return (
-    <PricingContext.Provider value={{ ...state, ...actions }}>
+    <PricingContext.Provider value={{ ...state, ...actions, PriceFormRef }}>
       {children}
     </PricingContext.Provider>
   )
