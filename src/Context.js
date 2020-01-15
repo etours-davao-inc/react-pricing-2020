@@ -57,11 +57,13 @@ export const Provider = (props) => {
     },
     priceItemSubmit(data) {
       console.log('Submitted', data);
+      if (data.item === "") return;
+      if (data.price == 0 || data.price < 0) return;
       const items = [...state.items,];
       const index = items.findIndex(({ key }) => key === data.key)
       let expenses = [...items[index].expenses];
       if (expenses.find(expense => expense.item === data.item)) return
-      expenses = [...expenses, data]
+      expenses = [...expenses, data];
       items[index].expenses = expenses;
       updateState({ ...state, items })
     }

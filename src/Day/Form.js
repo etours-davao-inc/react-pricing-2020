@@ -3,7 +3,7 @@ import { PricingContext } from '../Context';
 
 
 export default ({ k }) => {
-  const defaultState = { key: k, item: "", type: "miscellaneous", price: "0.00", shared: false, vat: false, coh: false, remarks: "" };
+  const defaultState = { key: k, item: "", type: "miscellaneous", price: "", shared: false, vat: false, coh: false, remarks: "" };
   const { priceItemSubmit } = useContext(PricingContext);
   const [state, setState] = useState(defaultState);
   const onChange = (e) => {
