@@ -3,7 +3,7 @@
 ## Use Cases
 - [x] As a user I want to be able to add new Day
 - [x] As a user I want to be able to add new expense item
-- [ ] As a user I want to be able to edit an expense item
+- [x] As a user I want to be able to edit an expense item
 - [ ] As a user I want to be able to set Markup and Tax
 - [ ] As a user I want to be able to override publish price
 - [ ] As a user I want app to automatically compute prices
