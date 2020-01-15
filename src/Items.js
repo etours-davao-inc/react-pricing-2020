@@ -9,7 +9,12 @@ export default () => {
   return (
     <>
       {items.map((item) => <Day key={item.key} item={item} />)}
-      <button onClick={() => addNewDay()}>Add Day</button>
+      <button 
+        onClick={() => addNewDay()}
+        className="btn btn-success"
+      >
+        Add Day
+      </button>
     </>
   )
 }
