@@ -3,9 +3,9 @@ import { PricingContext } from '../Context';
 
 
 export default ({ k }) => {
-  const initialState = {key: k, item: "", type: "miscellaneous", price: "0.00", shared: false, vat: false, coh: false, remarks: "" };
+  const defaultState = { key: k, item: "", type: "miscellaneous", price: "0.00", shared: false, vat: false, coh: false, remarks: "" };
   const { priceItemSubmit } = useContext(PricingContext);
-  const [state, setState] = useState(initialState);
+  const [state, setState] = useState(defaultState);
   const onChange = (e) => {
     console.log(e.target.name, e.target.value)
     const target = e.target;
@@ -16,17 +16,15 @@ export default ({ k }) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
-    const stateWithId = state;
-    const id = Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15)
-    console.log('id', id)
-    stateWithId.id = id
-    console.log('StateWithID', stateWithId.id)
-    priceItemSubmit(stateWithId);
-    setState(initialState)
+    priceItemSubmit({
+      ...state,
+      id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
+    });
+    setState(defaultState)
   }
-  
+
   return (
-    <form className="form-inline" onSubmit={onSubmit}>
+    <form className="form-inline" onSubmit={(e) => onSubmit(e)}>
       <input type="text" name="item" placeholder="Item" className="form-control mr-1" onChange={onChange} value={state.item} />
       <select className="custom-select mr-1" name="type" onChange={onChange} value={state.type} >
         <option value="miscellaneous" defaultValue>Miscellaneous</option>
@@ -34,7 +32,7 @@ export default ({ k }) => {
         <option value="transportation">Transportation</option>
         <option value="meals">Meals</option>
         <option value="tourguide">Tourist guide fee</option>
-        <option value="entrancefee">Entrance fee</option>
+        <option value="entrance fee">Entrance fee</option>
       </select>
       <input
         type="number"

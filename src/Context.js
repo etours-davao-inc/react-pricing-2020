@@ -10,10 +10,10 @@ const initialState = {
       key: 1,
       expenses: [
         {
-          id: '9r0ts8d8c8d36tbb0qbqw2',
+          id: 'cb5w83n8zgkzibxhxczts',
           key: 1,
           item: "Crocodile Park",
-          type: "entrancefee",
+          type: "entrance fee",
           price: "200",
           shared: false,
           vat: true,
@@ -52,19 +52,17 @@ export const Provider = (props) => {
       console.log(`Remove day ${key}`);
       const { items } = state;
       const filteredItems = items.filter((item) => item.key !== key);
-      updateDays(filteredItems.length)
-      refreshItems(filteredItems) // Refresh items
-      updateState({ ...state, items: filteredItems }) // remove
+      updateDays(filteredItems.length);
+      updateState({ ...state, items: refreshItems(filteredItems) });
     },
     priceItemSubmit(data) {
-      console.log(state.items)
-      console.log('Submitted',data.id);
-      const items = state.items;
-      const index = items.findIndex(({ key }) => {
-        return key === data.key;
-      })
-      items[index].expenses.push(data);
-      console.log('New item', items[index])
+      console.log('Submitted', data);
+      const items = [...state.items,];
+      const index = items.findIndex(({ key }) => key === data.key)
+      let expenses = [...items[index].expenses];
+      if (expenses.find(expense => expense.item === data.item)) return
+      expenses = [...expenses, data]
+      items[index].expenses = expenses;
       updateState({ ...state, items })
     }
   };
