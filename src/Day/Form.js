@@ -84,7 +84,13 @@ export default ({ k }) => {
         </div>
       </div>
       <input type="text" name="remarks" placeholder="remarks" className="form-control mr-1" onChange={onChange} />
-      <button type="submit" className="btn btn-success">Add</button>
+      <button
+        type="submit"
+        className="btn btn-success"
+        disabled={state.price == "" || state.item == ""}
+      >
+        Add
+      </button>
     </form>
   )
 };
