@@ -12,7 +12,7 @@ const CloseButton = ({ k }) => {
       <span aria-hidden="true" className="text-right"><FaTimesCircle style={{ color: 'red' }} /></span>
     </button>
   )
-}
+};
 
 const Wrapper = ({ children }) => (
   <div style={{ border: '1px solid white', padding: '8px', marginBottom: '8px', backgroundColor: 'white', color: '#282c34' }}>
@@ -20,21 +20,7 @@ const Wrapper = ({ children }) => (
   </div>
 );
 
-const DayHeader = ({ children }) => <h3 className="text-left">{children}</h3>
-
-export default (props) => {
-  const { Header, key, expenses } = props.item;
-  return (
-    <Wrapper>
-      <CloseButton k={key} />
-      <DayHeader>{Header}</DayHeader>
-      <Form k={key} />
-      <ExpenseTable>
-        {expenses.map((item) => <Expense key={item.id} item={item} />)}
-      </ExpenseTable>
-    </Wrapper>
-  )
-}
+const DayHeader = ({ children }) => <h3 className="text-left">{children}</h3>;
 
 const ExpenseTable = ({ children }) => (
   <div className="mt-4">
@@ -81,6 +67,22 @@ const Expense = (props) => {
     </tr>
   )
 };
+
+export default (props) => {
+  const { Header, key, expenses } = props.item;
+  return (
+    <Wrapper>
+      <CloseButton k={key} />
+      <DayHeader>{Header}</DayHeader>
+      <Form k={key} />
+      <ExpenseTable>
+        {expenses.map((item) => <Expense key={item.id} item={item} />)}
+      </ExpenseTable>
+    </Wrapper>
+  )
+}
+
+
 
 
 
