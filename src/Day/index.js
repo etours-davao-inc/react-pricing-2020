@@ -72,7 +72,7 @@ export default (props) => {
   const { Header, key, expenses } = props.item;
   return (
     <Wrapper>
-      <CloseButton k={key} />
+      { key > 1 && <CloseButton k={key} /> }
       <DayHeader>{Header}</DayHeader>
       <Form k={key} />
       <ExpenseTable>
