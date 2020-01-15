@@ -1,12 +1,12 @@
 # Etours Pricing App 2020
 
 ## Use Cases
-1. As a user I want to be able to add new Day
-2. As a user I want to be able to add new expense item
-3. As a user I want to be able to edit an expense item
-4. As a user I want to be able to set Markup and Tax
-5. As a user I want to be able to override publish price
-6. As a user I want app to automatically compute prices
+- [x] As a user I want to be able to add new Day
+- [x] As a user I want to be able to add new expense item
+- [ ] As a user I want to be able to edit an expense item
+- [ ] As a user I want to be able to set Markup and Tax
+- [ ] As a user I want to be able to override publish price
+- [ ] As a user I want app to automatically compute prices
 
 ## Expense Item Fields
 * Item (string)
