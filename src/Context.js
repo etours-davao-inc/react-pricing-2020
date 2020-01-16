@@ -23,6 +23,8 @@ const initialState = {
       ]
     }
   ],
+  markup: 30,
+  tax: 20,
 }
 
 export const Provider = (props) => {
@@ -88,6 +90,9 @@ export const Provider = (props) => {
       // if (expenses.find(exp => exp.item === expense.item)) return
       items[index].expenses[itemIndex] = expense;
       updateState({ ...state, items })
+    },
+    updateTaxMarkUp({markup, tax}) {
+      updateState({...state, markup, tax })
     }
   };
   const { children } = props

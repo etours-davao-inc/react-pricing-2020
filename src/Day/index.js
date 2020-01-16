@@ -15,7 +15,7 @@ const CloseButton = ({ k }) => {
 };
 
 const Wrapper = ({ children }) => (
-  <div style={{ border: '1px solid white', padding: '8px', marginBottom: '8px', backgroundColor: 'white', color: '#282c34' }}>
+  <div style={{ border: '1px solid white', padding: '8px', marginBottom: '8px', backgroundColor: 'white', color: '#282c34', borderRadius: '4px' }}>
     {children}
   </div>
 );

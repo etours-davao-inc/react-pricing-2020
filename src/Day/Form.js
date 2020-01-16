@@ -1,6 +1,8 @@
 import React, { useContext, useState, forwardRef, useImperativeHandle } from 'react';
 import { PricingContext } from '../Context';
 
+import './Form.css';
+
 const defaultState = { 
   item: "", 
   type: "miscellaneous", 
@@ -67,6 +69,7 @@ export default forwardRef((props, ref) => {
       />
       <div className="form-group mr-2">
         <div className="form-check">
+          <label htmlFor={`shared-${state.key}`} className="form-check-label">Shared</label>
           <input
             type="checkbox"
             id={`shared-${state.key}`}
@@ -75,11 +78,11 @@ export default forwardRef((props, ref) => {
             checked={state.shared}
             onChange={onChange}
           />
-          <label htmlFor={`shared-${state.key}`} className="form-check-label">Shared</label>
         </div>
       </div>
       <div className="form-group mr-2">
         <div className="form-check">
+          <label htmlFor={`vat-${state.key}`} className="form-check-label">Vat</label>
           <input
             type="checkbox"
             id={`vat-${state.key}`}
@@ -88,11 +91,11 @@ export default forwardRef((props, ref) => {
             checked={state.vat}
             onChange={onChange}
           />
-          <label htmlFor={`vat-${state.key}`} className="form-check-label">Vat</label>
         </div>
       </div>
       <div className="form-group mr-2">
         <div className="form-check">
+          <label htmlFor={`coh-${state.key}`} className="form-check-label">CoH</label>
           <input
             type="checkbox"
             id={`coh-${state.key}`}
@@ -101,7 +104,6 @@ export default forwardRef((props, ref) => {
             checked={state.coh}
             onChange={onChange}
           />
-          <label htmlFor={`coh-${state.key}`} className="form-check-label">CoH</label>
         </div>
       </div>
       <input type="text" name="remarks" placeholder="remarks" className="form-control mr-1" onChange={onChange} />
