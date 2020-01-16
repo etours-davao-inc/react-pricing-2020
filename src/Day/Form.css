@@ -1,0 +1,18 @@
+form, input, label {
+  font-size: 16px;
+}
+
+.form-check {
+  display: block!important;
+}
+
+input[type="checkbox" i] {
+  width: 21px; /*Desired width*/
+  height: 21px; /*Desired height*/
+  cursor: pointer;
+  background-color: white;
+}
+
+.form-control {
+  font-size: 16px !important;
+}
