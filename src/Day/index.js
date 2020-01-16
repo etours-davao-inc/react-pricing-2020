@@ -58,7 +58,7 @@ const Expense = (props) => {
     vat } = props.item;
   return (
     <tr onClick={() => priceItemClicked(id, key)}>
-      <td>{id}</td>
+      <td>{id.slice(-4,-1)}</td>
       <td>{item}</td>
       <td>{type}</td>
       <td>{`Php ${price}`}</td>
