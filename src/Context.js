@@ -14,7 +14,7 @@ const initialState = {
           key: 1,
           item: "Crocodile Park",
           type: "entrance fee",
-          price: "200",
+          price: 200,
           shared: false,
           vat: true,
           coh: true,
@@ -70,7 +70,7 @@ export const Provider = (props) => {
       expenses = [...expenses, data];
       items[index].expenses = expenses;
       updateState({ ...state, items })
-
+      computeTotal({...state, items});
     },
     priceItemClicked(id, k) {
       console.log('Clicked price item', k, id);
@@ -93,7 +93,8 @@ export const Provider = (props) => {
     },
     updateTaxMarkUp({markup, tax}) {
       updateState({...state, markup, tax })
-    }
+    },
+
   };
   const { children } = props
   return (
@@ -103,3 +104,10 @@ export const Provider = (props) => {
   )
 };
 
+const computeTotal = ({items, markup, tax}) => {
+  console.log("Items", items)
+  const expenses = items.map(item => item.expenses).flat();
+  console.log("Expenses", expenses)
+  const total = expenses.reduce((sum, {price}) => sum + price, 0);
+  console.log("Total", total)
+}
