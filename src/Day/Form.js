@@ -20,8 +20,10 @@ export default forwardRef((props, ref) => {
   const onChange = (e) => {
     console.log(e.target.name, e.target.value)
     const target = e.target;
-    const value = target.type === 'checkbox' ? target.checked : target.value;
+    let value = target.type === 'checkbox' ? target.checked : target.value;
+    if (target.type === 'number') value = Number(value);
     const name = target.name;
+    
     setState({ ...state, [name]: value })
   }
 
