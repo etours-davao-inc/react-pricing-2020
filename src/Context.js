@@ -108,6 +108,12 @@ const computeTotal = ({items, markup, tax}) => {
   console.log("Items", items)
   const expenses = items.map(item => item.expenses).flat();
   console.log("Expenses", expenses)
-  const total = expenses.reduce((sum, {price}) => sum + price, 0);
+  const total = expenses.reduce((sum, {price, shared, vat, coh}) => {
+     if (shared) sum['shared'] = sum.shared + price;
+     if (!shared) sum['individual'] = sum.individual + price;
+     if (vat) sum['vat'] = sum.vat + price;
+     if (coh) sum['coh'] = sum.coh + price;
+    return sum 
+  }, {shared:0, individual:0, vat: 0, coh: 0});
   console.log("Total", total)
 }
