@@ -113,7 +113,10 @@ const computeTotal = ({items, markup, tax}) => {
      if (!shared) sum['individual'] = sum.individual + price;
      if (vat) sum['vat'] = sum.vat + price;
      if (coh) sum['coh'] = sum.coh + price;
+     for (let i=1; i<=20; i++) {
+      sum['prices'][i] = [i, (sum['shared']/i + sum['individual']).toFixed(2)]
+     }
     return sum 
-  }, {shared:0, individual:0, vat: 0, coh: 0});
+  }, {shared:0, individual:0, vat: 0, coh: 0, prices: [['pax', 'priceBeforeTax', 'priceAfterTax']]});
   console.log("Total", total)
 }
