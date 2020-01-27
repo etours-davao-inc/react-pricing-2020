@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { Provider, PricingContext } from './Context';
+import { PricingContext } from './Context';
 import './App.css';
 
 import Items from './Items';
@@ -27,7 +27,7 @@ const TaxMarkUpForm = () => {
           onChange={onChange} 
           placeholder="0%" 
           className="form-control mr-1 text-right font-weight-bold"
-          value={state.markup}
+          value={markup}
         />
       </div>
       <div className="input-group">
@@ -41,7 +41,7 @@ const TaxMarkUpForm = () => {
           onChange={onChange} 
           placeholder="0%" 
           className="form-control mr-1 text-right font-weight-bold"
-          value={state.tax}
+          value={tax}
         />
       </div>
     </div>
@@ -49,18 +49,18 @@ const TaxMarkUpForm = () => {
 }
 
 export default () => {
-  const { name } = useContext(PricingContext);
-  console.log(name)
+  const { name, total } = useContext(PricingContext);
   return (
-    <Provider>
+
       <div className="App">
         <header className="App-header">
           <h1>Hello, {name}</h1>
           <TaxMarkUpForm />
           <Items />
+          <p>{JSON.stringify(total)}</p>
         </header>
       </div>
-    </Provider>
+
   );
 }
 
