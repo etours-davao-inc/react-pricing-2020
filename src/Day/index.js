@@ -71,13 +71,12 @@ const Expense = (props) => {
 };
 
 export default (props) => {
-  const { PriceFormRef } = useContext(PricingContext);
-  const { Header, key, expenses } = props.item;
+  const { Header, key, expenses, dayRef } = props.item;
   return (
     <Wrapper>
       { key > 1 && <CloseButton k={key} /> }
       <DayHeader>{Header}</DayHeader>
-      <Form k={key} ref={PriceFormRef} />
+      <Form k={key} ref={dayRef} />
       <ExpenseTable>
         {expenses.map((item) => <Expense key={item.id} item={item} />)}
       </ExpenseTable>

@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, createRef } from 'react';
 
 export const PricingContext = React.createContext();
 
@@ -41,10 +41,9 @@ const initialState = {
 }
 
 export const Provider = (props) => {
+  initialState.items[0]['dayRef'] = createRef();
   const [state, updateState] = useState(initialState);
   const [days, updateDays] = useState(1)
-  const PriceFormRef = useRef(null);
-
   const refreshItems = (items) => {
     items.forEach((item, i) => {
       const day = i + 1
@@ -63,7 +62,7 @@ export const Provider = (props) => {
       updateDays(currentDay);
       updateState(state => ({
         ...state,
-        items: [...items, { Header: `Day ${currentDay}`, key: currentDay, expenses: [] }]
+        items: [...items, { Header: `Day ${currentDay}`, key: currentDay, expenses: [], dayRef:createRef() }]
       })
       )
     },
@@ -93,7 +92,7 @@ export const Provider = (props) => {
       const items = [...state.items,];
       const index = items.findIndex(({ key }) => key === k)
       let expense = [...items[index].expenses].find(expense => expense.id === id);
-      PriceFormRef.current.setFormState(expense)
+      items[index].dayRef.current.setFormState(expense)
     },
     updatePriceItem(expense) {
       console.log('Update Price Item', expense)
@@ -113,7 +112,7 @@ export const Provider = (props) => {
   };
   const { children } = props
   return (
-    <PricingContext.Provider value={{ ...state, ...actions, PriceFormRef }}>
+    <PricingContext.Provider value={{ ...state, ...actions }}>
       {children}
     </PricingContext.Provider>
   )
