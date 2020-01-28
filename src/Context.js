@@ -2,14 +2,7 @@ import React, { useState, useRef } from 'react';
 
 export const PricingContext = React.createContext();
 
-const initialSumState =
-{
-  shared: 0,
-  individual: 0,
-  vat: 0,
-  coh: 0,
-  prices: [['pax', 'cost', 'mark up', 'price before tax', 'price after tax', 'price after commission', 'sales', 'cost of service', 'profit', 'VAT payable', 'IT payable', 'net income']]
-}
+
 
 const initialState = {
   name: 'Tom',
@@ -32,7 +25,14 @@ const initialState = {
       ]
     }
   ],
-  total: initialSumState,
+  total: {
+    shared: 0,
+    individual: 0,
+    vatShared: 0,
+    vatIndividual: 0,
+    coh: 0,
+    prices: [['pax', 'cost', 'mark up', 'price before tax', 'price after tax', 'price after commission', 'sales', 'cost of service', 'profit', 'VAT payable', 'IT payable', 'net income']]
+  },
   markup: .30,
   tax: .20,
   commission: 0.07,
@@ -119,45 +119,62 @@ export const Provider = (props) => {
   )
 };
 
-const computeTotal = ({ min, max, items, markup, tax, commission }) => {
+const reducedItems = (items) => {
   console.log("Items", items)
   const expenses = items.map(item => item.expenses).flat();
-  const numToString = (num) => (num).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-  const total = expenses.reduce((sum, { price, shared, vat, coh }) => {
-    if (shared) sum['shared'] = sum.shared + price;
-    if (!shared) sum['individual'] = sum.individual + price;
-    if (vat) sum['vat'] = sum.vat + price;
+  console.log('expenses', expenses)
+  return expenses.reduce((sum, { price, shared, vat, coh }) => {
+    if (shared) sum.shared = sum.shared + price;
+    if (!shared) sum.individual = sum.individual + price;
+    if (shared && vat) sum.vatShared = sum.vatShared + price;
+    if (!shared && vat) sum.vatIndividual = sum.vatIndividual + price;
     if (coh) sum['coh'] = sum.coh + price;
-    for (let i = min; i <= max; i++) {
-      let cost = (sum['shared'] / i + sum['individual']);
-      let cos = cost * i;
-      let markUp = cost * markup;
-      let priceBeforeTax = cost + markUp;
-      let priceAfterTax = priceBeforeTax + (tax * priceBeforeTax);
-      let commissionRate = commission * priceAfterTax;
-      let priceAfterCommission = priceAfterTax - commissionRate;
-      let sales = priceAfterCommission * i;
-      let profit = sales - cos;
-      let vatPayable = 0;
-      let itPayable = 0;
-      let netIncome = 0;
-      sum['prices'][i] = [
-        i,
-        numToString(cost),
-        numToString(markUp),
-        numToString(priceBeforeTax),
-        numToString(priceAfterTax),
-        numToString(priceAfterCommission),
-        numToString(sales),
-        numToString(cos),
-        numToString(profit),
-        numToString(vatPayable),
-        numToString(itPayable),
-        numToString(netIncome)
-      ]
-    }
+    console.log('sum shared', sum.shared)
     return sum
-  }, initialSumState);
-  console.log('computed total', total)
-  return total;
+  }, {
+    shared: 0,
+    individual: 0,
+    vatShared: 0,
+    vatIndividual: 0,
+    coh: 0,
+    prices: [['pax', 'cost', 'mark up', 'price before tax', 'price after tax', 'price after commission', 'sales', 'cost of service', 'profit', 'VAT payable', 'IT payable', 'net income']]
+  });
 }
+
+
+
+const computeTotal = ({items, min, max, markup, tax, commission}) => {
+  const numToString = (num) => (num).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
+  const reduced = reducedItems(items);
+  console.log(reduced);
+  for (let pax = min; pax <= max; pax++) {
+    let cost = reduced.shared/pax + reduced.individual;
+    let cos = cost * pax;
+    let markUpCost = cost * markup;
+    let priceBeforeTax = cost + markUpCost;
+    let priceAfterTax = priceBeforeTax + (tax * priceBeforeTax);
+    let commissionRate = commission * priceAfterTax;
+    let priceAfterCommission = priceAfterTax - commissionRate;
+    let sales = priceAfterCommission * pax;
+    let profit = sales - cos;
+    let vatableExpenses = reduced.vatShared + (pax * reduced.vatIndividual);
+    let vatPayable = (sales*.12) - (vatableExpenses*.12);
+    let itPayable = profit *.30;
+    let netIncome = profit - (vatPayable + itPayable);
+    reduced.prices[pax] = [
+      pax,
+      numToString(cost),
+      numToString(markUpCost),
+      numToString(priceBeforeTax),
+      numToString(priceAfterTax),
+      numToString(priceAfterCommission),
+      numToString(sales),
+      numToString(cos),
+      numToString(profit),
+      numToString(vatPayable),
+      numToString(itPayable),
+      numToString(netIncome)        
+    ]
+  }
+  return reduced;
+};
