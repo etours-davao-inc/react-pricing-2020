@@ -62,9 +62,9 @@ const Expense = (props) => {
       <td>{item}</td>
       <td>{type}</td>
       <td>{`Php ${price}`}</td>
-      <td>{shared ? 'True' : 'False'}</td>
-      <td>{vat ? 'True' : 'False'}</td>
-      <td>{coh ? 'True' : 'False'}</td>
+      <td>{shared && 'Shared'}</td>
+      <td>{vat && 'Vat'}</td>
+      <td>{coh && 'CoH'}</td>
       <td>{remarks}</td>
     </tr>
   )
