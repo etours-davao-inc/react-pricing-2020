@@ -2,6 +2,15 @@ import React, { useState, useRef } from 'react';
 
 export const PricingContext = React.createContext();
 
+const initialSumState =
+{
+  shared: 0,
+  individual: 0,
+  vat: 0,
+  coh: 0,
+  prices: [['pax', 'cost', 'mark up', 'price before tax', 'price after tax', 'price after commission', 'sales', 'cost of service', 'profit', 'VAT payable', 'IT payable', 'net income']]
+}
+
 const initialState = {
   name: 'Tom',
   items: [
@@ -23,10 +32,12 @@ const initialState = {
       ]
     }
   ],
-  total: {},
+  total: initialSumState,
   markup: .30,
   tax: .20,
-  commission: 0,
+  commission: 0.07,
+  min: 1,
+  max: 10,
 }
 
 export const Provider = (props) => {
@@ -52,7 +63,8 @@ export const Provider = (props) => {
       updateDays(currentDay);
       updateState(state => ({
         ...state,
-        items: [...items, { Header: `Day ${currentDay}`, key: currentDay, expenses: [] } ]})
+        items: [...items, { Header: `Day ${currentDay}`, key: currentDay, expenses: [] }]
+      })
       )
     },
     removeDay(key) {
@@ -73,7 +85,7 @@ export const Provider = (props) => {
       if (expenses.find(expense => expense.item === data.item)) return
       expenses = [...expenses, data];
       items[index].expenses = expenses;
-      const total = computeTotal({ ...state});
+      const total = computeTotal({ ...state });
       updateState({ ...state, total })
     },
     priceItemClicked(id, k) {
@@ -95,8 +107,8 @@ export const Provider = (props) => {
       items[index].expenses[itemIndex] = expense;
       updateState({ ...state, items })
     },
-    updateTaxMarkUp({ markup, tax }) {
-      updateState({...state, markup, tax});
+    updateTaxMarkUp({ markup, tax, min, max, commission }) {
+      updateState({ ...state, markup, tax, min, max, commission });
     },
   };
   const { children } = props
@@ -107,29 +119,19 @@ export const Provider = (props) => {
   )
 };
 
-const initialSumState =
-{
-  shared: 0,
-  individual: 0,
-  vat: 0,
-  coh: 0,
-  prices: [['cost', 'mark up', 'price before tax', 'price after tax', 'price after commission', 'sales', 'cost of service', 'profit', 'VAT payable', 'IT payable', 'net income']]
-}
-
-const computeTotal = ({ items, markup, tax, commission }) => {
+const computeTotal = ({ min, max, items, markup, tax, commission }) => {
   console.log("Items", items)
   const expenses = items.map(item => item.expenses).flat();
-  const cos = expenses.reduce((sum, {price}) => sum + price, 0);
-  console.log("cos", cos)
-  console.log("Expenses", expenses)
+  const numToString = (num) => (num).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
   const total = expenses.reduce((sum, { price, shared, vat, coh }) => {
     if (shared) sum['shared'] = sum.shared + price;
     if (!shared) sum['individual'] = sum.individual + price;
     if (vat) sum['vat'] = sum.vat + price;
     if (coh) sum['coh'] = sum.coh + price;
-    for (let i = 1; i <= 20; i++) {
+    for (let i = min; i <= max; i++) {
       let cost = (sum['shared'] / i + sum['individual']);
-      let markUp = cost * markup; 
+      let cos = cost * i;
+      let markUp = cost * markup;
       let priceBeforeTax = cost + markUp;
       let priceAfterTax = priceBeforeTax + (tax * priceBeforeTax);
       let commissionRate = commission * priceAfterTax;
@@ -141,17 +143,17 @@ const computeTotal = ({ items, markup, tax, commission }) => {
       let netIncome = 0;
       sum['prices'][i] = [
         i,
-        cost,
-        markUp.toFixed(2),
-        priceBeforeTax.toFixed(2), 
-        priceAfterTax.toFixed(2),
-        priceAfterCommission.toFixed(2),
-        sales.toFixed(2),
-        cos.toFixed(2),
-        profit.toFixed(2),
-        vatPayable.toFixed(2),
-        itPayable.toFixed(2),
-        netIncome.toFixed(2)
+        numToString(cost),
+        numToString(markUp),
+        numToString(priceBeforeTax),
+        numToString(priceAfterTax),
+        numToString(priceAfterCommission),
+        numToString(sales),
+        numToString(cos),
+        numToString(profit),
+        numToString(vatPayable),
+        numToString(itPayable),
+        numToString(netIncome)
       ]
     }
     return sum
