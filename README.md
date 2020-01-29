@@ -5,7 +5,7 @@
 - [x] As a user I want to be able to add new expense item
 - [x] As a user I want to be able to edit an expense item
 - [x] As a user I want to be able to set Markup and Tax
-- [ ] As a user I want app to automatically compute prices
+- [x] As a user I want app to automatically compute prices
 - [ ] As a user I want to be able to override publish price
 
 
