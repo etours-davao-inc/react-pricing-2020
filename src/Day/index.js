@@ -1,6 +1,6 @@
 import React, { useContext, useRef } from 'react';
 import { PricingContext } from '../Context';
-import { FaTimesCircle } from 'react-icons/fa';
+import { FaTimesCircle, FaEdit } from 'react-icons/fa';
 import './Day.css';
 import Form from './Form';
 
@@ -35,6 +35,7 @@ const ExpenseTable = ({ children }) => (
           <th>Vat</th>
           <th>CoH</th>
           <th>Remarks</th>
+          <th colSpan={2}></th>
         </tr>
       </thead>
       <tbody>
@@ -45,7 +46,7 @@ const ExpenseTable = ({ children }) => (
 )
 
 const Expense = (props) => {
-  const { priceItemClicked } = useContext(PricingContext);
+  const { deleteItem } = useContext(PricingContext);
   const { 
     id,
     day,
@@ -58,7 +59,7 @@ const Expense = (props) => {
     vat } = props.item;
   const { onClick } = props;  
   return (
-    <tr onClick={() => onClick()}>
+    <tr>
       <td>{id.slice(-4,-1)}</td>
       <td>{item}</td>
       <td>{type}</td>
@@ -67,6 +68,8 @@ const Expense = (props) => {
       <td>{vat && 'Vat'}</td>
       <td>{coh && 'CoH'}</td>
       <td>{remarks}</td>
+      <td><FaEdit style={{ color: 'green', fontSize:'1.5em' }} onClick={() => onClick()} /></td>
+      <td><FaTimesCircle style={{ color: 'red', fontSize:'1.5em' }} onClick={() => deleteItem(id)} /></td>
     </tr>
   )
 };
@@ -87,10 +90,11 @@ export default (props) => {
       { day > 1 && <CloseButton k={day} /> }
       <DayHeader>{`Day ${day}`}</DayHeader>
       <Form k={day} ref={formRef} />
-      {/* <Form k={day} /> */}
-      <ExpenseTable>
-        {todaysExpenses.map(item => <Expense key={item.id} item={item} onClick={() => onClick(item)} />)}
-      </ExpenseTable>
+      {todaysExpenses.length > 0 &&
+        <ExpenseTable>
+          {todaysExpenses.map(item => <Expense key={item.id} item={item} onClick={() => onClick(item)} />)}
+        </ExpenseTable>
+      }
     </Wrapper>
   )
 }

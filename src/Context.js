@@ -72,6 +72,11 @@ export const Provider = (props) => {
       updateState({ ...state, expenses })
     },
 
+    deleteItem(id) {
+      console.log('Delete item', id);
+      updateState({...state, expenses: state.expenses.filter(ex => ex.id !== id)});
+    },
+
     updateTaxMarkUp({ markup, tax, min, max, commission }) {
       updateState({ ...state, markup, tax, min, max, commission });
     },
