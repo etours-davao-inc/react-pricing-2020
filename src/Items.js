@@ -1,15 +1,21 @@
-import React,  {useContext} from 'react';
+import React, { useContext } from 'react';
 import { PricingContext } from './Context';
 
 import Day from './Day';
 
 export default () => {
-  const { items, addNewDay } = useContext(PricingContext);
+  const { expenses, days, addNewDay } = useContext(PricingContext);
+  console.log(expenses)
+  const DayComponent = []
+  for (let day = 1; day <= days; day++) {
+    DayComponent.push(<Day key={day} day={day} />)
+  }
 
   return (
     <>
-      {items.map((item) => <Day key={item.key} item={item} />)}
-      <button 
+      {/* {expenses.map((item) => <Day key={item.key} item={item} />)} */}
+      {DayComponent}
+      <button
         onClick={() => addNewDay()}
         className="btn btn-success"
       >

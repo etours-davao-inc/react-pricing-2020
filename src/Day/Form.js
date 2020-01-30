@@ -4,6 +4,7 @@ import { PricingContext } from '../Context';
 import './Form.css';
 
 const defaultState = { 
+  day: "",
   item: "", 
   type: "miscellaneous", 
   price: "", 
@@ -36,7 +37,7 @@ export default forwardRef((props, ref) => {
     }
     priceItemSubmit({
       ...state,
-      key: k,
+      day: k,
       id: Math.random().toString(36).substring(2, 15) + Math.random().toString(36).substring(2, 15),
     });
     setState(defaultState)

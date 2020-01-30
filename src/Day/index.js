@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useRef } from 'react';
 import { PricingContext } from '../Context';
 import { FaTimesCircle } from 'react-icons/fa';
 import './Day.css';
@@ -48,7 +48,7 @@ const Expense = (props) => {
   const { priceItemClicked } = useContext(PricingContext);
   const { 
     id,
-    key,
+    day,
     item,
     type,
     price,
@@ -56,8 +56,9 @@ const Expense = (props) => {
     shared,
     coh,
     vat } = props.item;
+  const { onClick } = props;  
   return (
-    <tr onClick={() => priceItemClicked(id, key)}>
+    <tr onClick={() => onClick()}>
       <td>{id.slice(-4,-1)}</td>
       <td>{item}</td>
       <td>{type}</td>
@@ -71,14 +72,24 @@ const Expense = (props) => {
 };
 
 export default (props) => {
-  const { Header, key, expenses, dayRef } = props.item;
+  const formRef = useRef(null);
+  const { expenses } = useContext(PricingContext);
+  const { day } = props;
+  const todaysExpenses = expenses.filter(expense => expense.day === day)
+
+  const onClick = (item) => {
+    console.log('Clicked price item', item);
+    formRef.current.setFormState(item)
+  }
+
   return (
     <Wrapper>
-      { key > 1 && <CloseButton k={key} /> }
-      <DayHeader>{Header}</DayHeader>
-      <Form k={key} ref={dayRef} />
+      { day > 1 && <CloseButton k={day} /> }
+      <DayHeader>{`Day ${day}`}</DayHeader>
+      <Form k={day} ref={formRef} />
+      {/* <Form k={day} /> */}
       <ExpenseTable>
-        {expenses.map((item) => <Expense key={item.id} item={item} />)}
+        {todaysExpenses.map(item => <Expense key={item.id} item={item} onClick={() => onClick(item)} />)}
       </ExpenseTable>
     </Wrapper>
   )

@@ -2,27 +2,19 @@ import React, { useState, createRef } from 'react';
 
 export const PricingContext = React.createContext();
 
-
-
 const initialState = {
   name: 'Tom',
-  items: [
+  expenses: [
     {
-      Header: "Day 1",
-      key: 1,
-      expenses: [
-        {
-          id: 'cb5w83n8zgkzibxhxczts',
-          key: 1,
-          item: "Crocodile Park",
-          type: "entrance fee",
-          price: 200,
-          shared: false,
-          vat: true,
-          coh: true,
-          remarks: "",
-        }
-      ]
+      day: 1,
+      id: 'cb5w83n8zgkzibxhxczts',
+      item: "Crocodile Park",
+      type: "entrance fee",
+      price: 200,
+      shared: false,
+      vat: true,
+      coh: true,
+      remarks: "",
     }
   ],
   total: {
@@ -41,87 +33,62 @@ const initialState = {
 }
 
 export const Provider = (props) => {
-  initialState.items[0]['dayRef'] = createRef();
   const [state, updateState] = useState(initialState);
   const [days, updateDays] = useState(1)
-  const refreshItems = (items) => {
-    items.forEach((item, i) => {
-      const day = i + 1
-      item.Header = `Day ${day}`
-      item.key = day
-      item.expenses.forEach(expense => expense.key = day)
-      console.log(day)
-    });
-  }
 
   const actions = {
     addNewDay() {
       console.log("Add new day passed to context")
-      const { items } = state;
-      const currentDay = days + 1
-      updateDays(currentDay);
-      updateState(state => ({
-        ...state,
-        items: [...items, { Header: `Day ${currentDay}`, key: currentDay, expenses: [], dayRef:createRef() }]
+      updateDays(days + 1);
+    },
+
+    removeDay(day) {
+      console.log(`Remove day ${day}`);
+      updateDays(days - 1);
+      const expenses = state.expenses.filter(expense => expense.day !== day)
+      expenses.forEach(expense => {
+        if (expense.day > day) expense.day--
       })
-      )
+      updateState({
+        ...state, 
+        expenses: expenses
+      })
     },
-    removeDay(key) {
-      console.log(`Remove day ${key}`);
-      const { items } = state;
-      const filteredItems = items.filter((item) => item.key !== key);
-      updateDays(filteredItems.length);
-      refreshItems(filteredItems)
-      updateState({ ...state, items: filteredItems });
-    },
+
     priceItemSubmit(data) {
       console.log('Submitted', data);
       if (data.item === "") return;
       if (data.price === 0 || data.price < 0) return;
-      const items = [...state.items];
-      const index = items.findIndex(({ key }) => key === data.key)
-      let expenses = [...items[index].expenses];
-      if (expenses.find(expense => expense.item === data.item)) return
-      expenses = [...expenses, data];
-      items[index].expenses = expenses;
-      const total = computeTotal({ ...state });
-      updateState({ ...state, total })
+      if (state.expenses.find(expense => expense.item === data.item)) return
+      const expenses = [...state.expenses, data]
+      console.log(expenses)
+      const total = computeTotal({...state, expenses})
+      updateState({ ...state, expenses, total })
     },
-    priceItemClicked(id, k) {
-      console.log('Clicked price item', k, id);
-      const items = [...state.items,];
-      const index = items.findIndex(({ key }) => key === k)
-      let expense = [...items[index].expenses].find(expense => expense.id === id);
-      items[index].dayRef.current.setFormState(expense)
-    },
+
     updatePriceItem(expense) {
       console.log('Update Price Item', expense)
       if (expense.item === "") return;
       if (expense.price === 0 || expense.price < 0) return;
-      const items = [...state.items,];
-      const index = items.findIndex(({ key }) => key === expense.key)
-      let expenses = [...items[index].expenses];
-      const itemIndex = expenses.findIndex(exp => exp.id === expense.id);
-      // if (expenses.find(exp => exp.item === expense.item)) return
-      items[index].expenses[itemIndex] = expense;
-      updateState({ ...state, items })
+      let expenses = [...state.expenses];
+      const index = expenses.findIndex(exp => exp.id === expense.id)
+      expenses[index] = expense;
+      updateState({ ...state, expenses })
     },
+
     updateTaxMarkUp({ markup, tax, min, max, commission }) {
       updateState({ ...state, markup, tax, min, max, commission });
     },
   };
   const { children } = props
   return (
-    <PricingContext.Provider value={{ ...state, ...actions }}>
+    <PricingContext.Provider value={{ ...state, days, ...actions }}>
       {children}
     </PricingContext.Provider>
   )
 };
 
-const reducedItems = (items) => {
-  console.log("Items", items)
-  const expenses = items.map(item => item.expenses).flat();
-  console.log('expenses', expenses)
+const reducedExpenses = (expenses) => {
   return expenses.reduce((sum, { price, shared, vat, coh }) => {
     if (shared) sum.shared = sum.shared + price;
     if (!shared) sum.individual = sum.individual + price;
@@ -142,12 +109,12 @@ const reducedItems = (items) => {
 
 
 
-const computeTotal = ({items, min, max, markup, tax, commission}) => {
+const computeTotal = ({ expenses, min, max, markup, tax, commission }) => {
   const numToString = (num) => (num).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-  const reduced = reducedItems(items);
+  const reduced = reducedExpenses(expenses);
   console.log(reduced);
   for (let pax = min; pax <= max; pax++) {
-    let cost = reduced.shared/pax + reduced.individual;
+    let cost = reduced.shared / pax + reduced.individual;
     let cos = cost * pax;
     let markUpCost = cost * markup;
     let priceBeforeTax = cost + markUpCost;
@@ -157,8 +124,8 @@ const computeTotal = ({items, min, max, markup, tax, commission}) => {
     let sales = priceAfterCommission * pax;
     let profit = sales - cos;
     let vatableExpenses = reduced.vatShared + (pax * reduced.vatIndividual);
-    let vatPayable = (sales*.12) - (vatableExpenses*.12);
-    let itPayable = profit *.30;
+    let vatPayable = (sales * .12) - (vatableExpenses * .12);
+    let itPayable = profit * .30;
     let netIncome = profit - (vatPayable + itPayable);
     reduced.prices[pax] = [
       pax,
@@ -172,7 +139,7 @@ const computeTotal = ({items, min, max, markup, tax, commission}) => {
       numToString(profit),
       numToString(vatPayable),
       numToString(itPayable),
-      numToString(netIncome)        
+      numToString(netIncome)
     ]
   }
   return reduced;
