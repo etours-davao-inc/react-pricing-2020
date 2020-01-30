@@ -30,6 +30,8 @@ export default forwardRef((props, ref) => {
 
   const onSubmit = (e) => {
     e.preventDefault();
+    if (state.item === "") return;
+    if (state.price === 0 || state.price < 0) return;
     if (state.id) {
       updatePriceItem(state)
       setState(defaultState)

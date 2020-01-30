@@ -57,8 +57,6 @@ export const Provider = (props) => {
 
     priceItemSubmit(data) {
       console.log('Submitted', data);
-      if (data.item === "") return;
-      if (data.price === 0 || data.price < 0) return;
       if (state.expenses.find(expense => expense.item === data.item)) return
       const expenses = [...state.expenses, data]
       console.log(expenses)
@@ -68,8 +66,6 @@ export const Provider = (props) => {
 
     updatePriceItem(expense) {
       console.log('Update Price Item', expense)
-      if (expense.item === "") return;
-      if (expense.price === 0 || expense.price < 0) return;
       let expenses = [...state.expenses];
       const index = expenses.findIndex(exp => exp.id === expense.id)
       expenses[index] = expense;
