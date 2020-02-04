@@ -1,5 +1,6 @@
-form, input, label {
-  font-size: 16px;
+form, input, label, select {
+  font-size: 15px;
+  border: none !important;
 }
 
 .form-check {
