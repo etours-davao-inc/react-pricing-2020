@@ -7,7 +7,7 @@ const initialState = {
   expenses: [
     {
       day: 1,
-      id: 'cb5w83n8zgkzibxhxczts',
+      id: Math.random().toString(36).substring(2, 6),
       item: "Crocodile Park",
       type: "entrance fee",
       price: 200,
