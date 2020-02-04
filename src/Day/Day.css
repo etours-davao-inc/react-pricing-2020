@@ -10,8 +10,3 @@ th, td {
   border: 1px solid rgba(87, 101, 116,.40);
   padding: 2px;
 }
-
-tr:hover {
-  cursor: pointer;
-  background-color: rgba(72, 219, 251,.50);
-}
